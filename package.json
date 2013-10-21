@@ -1,0 +1,16 @@
+{
+  "name": "sqs-buffer",
+  "version": "0.0.0",
+  "description": "Buffer messages to send in batches to aws sqs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bob Corsaro <rcorsaro@gmail.com>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "aws-sdk": "~1.9.0",
+    "debug": "~0.7.2",
+    "underscore": "~1.5.2"
+  }
+}
