@@ -6,9 +6,7 @@ buf.write('hi')
 buf.write('there')
 process.stdin.pipe(buf)
 process.on('SIGINT', function() {
-  buf.flush().then(function() {
-    process.exit()
-  })
+  buf.flush().then(process.exit)
   setTimeout(function() {
     console.error('exit without flushing buffer (timeout)')
     process.exit(127)
