@@ -17,6 +17,7 @@ var AWS = require('aws-sdk')
   , debug = require('debug')('sqs-buffer')
   , stream = require('stream')
   , inspect = require('util').inspect
+  , q = require('q')
 
 function SqsBuffer(awsOpts, streamOpts) {
   if (!(this instanceof SqsBuffer)) {
@@ -126,11 +127,18 @@ SqsBuffer.prototype._write = function(chunk, _, fn) {
 }
 
 SqsBuffer.prototype.flush = function() {
-  this._send()
-  if (this.logBuffer.length > 0) {
-    _sendBatch(this.sqs, this.logBuffer, this.queueUrl, this)
-    this.logBuffer = []
+  var deferred = q.defer()
+  if (this.logBuffer.length == 0) {
+    deferred.resolve()
+  } else {
+    this.on('bufferEmptied', deferred.resolve)
+    this._send()
+    if (this.logBuffer.length > 0) {
+      _sendBatch(this.sqs, this.logBuffer, this.queueUrl, this)
+      this.logBuffer = []
+    }
   }
+  return deferred.promise
 }
 
 exports = module.exports = SqsBuffer
